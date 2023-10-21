@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Add_To_Cart } from "../store/CartSlice";
+import GetUser from "../customHook/GetUser";
+import { useNavigate } from "react-router-dom";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -18,8 +20,16 @@ const Products = () => {
 
   const categories = [...new Set(products.map((item) => item.category))];
 const dispatch = useDispatch()
+const navigate = useNavigate()
+const user = GetUser();
+
   const handleAddToCart = (product) =>{
+    if(user){
     dispatch(Add_To_Cart(product))
+
+    }else{
+      navigate("/login")
+    }
   }
 
   return (

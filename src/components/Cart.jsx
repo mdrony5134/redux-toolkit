@@ -1,11 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AiOutlineClose, AiOutlineStar, AiFillStar } from "react-icons/ai";
-import { Remove_To_Cart } from "../store/CartSlice";
-import { useState } from "react";
+import { Remove_To_Cart, Set_Product_Rating } from "../store/CartSlice";
+import {Product_Update } from "../store/ProductSlice";
+// import { useState } from "react";
 
 const Cart = () => {
-  const rating = [1, 2, 3, 4, 5];
-  const [value, setValue] = useState(0);
+  const ratingList = [1, 2, 3, 4, 5];
+  // const [value, setValue] = useState(0);
   // const { state, dispatch } = useProduct();
   const cart = useSelector((state) => state.cart.cart);
   const dispatch = useDispatch();
@@ -21,6 +22,9 @@ const Cart = () => {
       totalPrice: 0,
     }
   );
+  // const handleSubmitRating = (productId, ratingValue) =>{
+  //   dispatch(Set_Product_Rating({ id: productId, rating: ratingValue }))
+  // }
 
   return (
     <div>
@@ -49,71 +53,79 @@ const Cart = () => {
               </tr>
             </thead>
             <tbody>
-              {cart.map(({ image, title, price, quantity, id }, index) => (
-                <tr
-                  key={index}
-                  className="bg-white text-lg border-b dark:bg-gray-900 dark:border-gray-700"
-                >
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              {cart.map(
+                ({ image, title, price, quantity, id, rating }, index) => (
+                  <tr
+                    key={index}
+                    className="bg-white text-lg border-b dark:bg-gray-900 dark:border-gray-700"
                   >
-                    <img
-                      className="object-cover object-center w-24 h-24 mb-4 mx-auto"
-                      src={image}
-                      alt="ecommece"
-                    />
-                  </th>
-                  <td className=" py-4 absolute w-[15%]">
-                    {title.length > 20 ? `${title.slice(0, 20)} ...` : title}
-                  </td>
+                    <th
+                      scope="row"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    >
+                      <img
+                        className="object-cover object-center w-24 h-24 mb-4 mx-auto"
+                        src={image}
+                        alt="ecommece"
+                      />
+                    </th>
+                    <td className=" py-4 absolute w-[15%]">
+                      {title.length > 20 ? `${title.slice(0, 20)} ...` : title}
+                    </td>
 
-                  <div className=" flex relative mt-16 pb-4">
-                    {rating.map((rating, index) => (
-                      <div key={index}>
-                        {rating <= value ? (
+                    <div className=" flex relative mt-16 pb-4">
+                      {ratingList.map((value, index) => (
+                        <div key={index}>
                           <span
-                            onClick={() => setValue(rating)}
+                            onClick={() =>
+                             { dispatch(
+                                Set_Product_Rating({ id, rating: value })
+                              );
+                              dispatch(Product_Update({ id, rating: value }))
+                            }
+                            }
                             className="text-yellow-600 text-2xl"
                           >
-                            <AiFillStar />
+                            {value <= rating ? (
+                              <AiFillStar />
+                            ) : (
+                              <AiOutlineStar />
+                            )}
                           </span>
-                        ) : (
-                          <span
-                            onClick={() => setValue(rating)}
-                            className="text-yellow-600 text-2xl"
-                          >
-                            <AiOutlineStar />
-                          </span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                  <button className="bg-[#ff6347] px-3 py-1  text-white  rounded-md">
-                    Submit Rating
-                  </button>
+                        </div>
+                      ))}
+                    </div>
+                    {/* <button 
+                    className="bg-[#ff6347] px-3 py-1  text-white  rounded-md"
+                    // onClick={()=>handleSubmitRating(id, rating)}
+                    >
+                      Submit Rating
+                    </button> */}
 
-                  <td className="pl-8">{quantity}</td>
-                  <td className="px-6 py-4">${Math.floor(price)}</td>
-                  <td className="px-6 py-4">${Math.floor(quantity * price)}</td>
-                  <td className="px-6 py-4">
-                    <button
-                      onClick={() => dispatch()}
-                      className="bg-[#ff6347] px-3 py-2 text-white  rounded-md"
-                    >
-                      Buy Now
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      onClick={() => dispatch(Remove_To_Cart(id))}
-                      className="bg-[#ff6347] px-3 py-2 text-white text-lg rounded-md"
-                    >
-                      <AiOutlineClose />
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                    <td className="pl-8">{quantity}</td>
+                    <td className="px-6 py-4">${Math.floor(price)}</td>
+                    <td className="px-6 py-4">
+                      ${Math.floor(quantity * price)}
+                    </td>
+                    <td className="px-6 py-4">
+                      <button
+                        onClick={() => dispatch()}
+                        className="bg-[#ff6347] px-3 py-2 text-white  rounded-md"
+                      >
+                        Buy Now
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        onClick={() => dispatch(Remove_To_Cart(id))}
+                        className="bg-[#ff6347] px-3 py-2 text-white text-lg rounded-md"
+                      >
+                        <AiOutlineClose />
+                      </button>
+                    </td>
+                  </tr>
+                )
+              )}
             </tbody>
           </table>
 

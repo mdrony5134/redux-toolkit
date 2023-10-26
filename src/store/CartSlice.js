@@ -12,12 +12,12 @@ const  CartSlice = createSlice({
         if(item){
             item.quantity += 1
             toast.info("Increase product quantity",{
-                position: "top-center",
+                position: "top-left",
             })
         }else{
             state.cart.push({...action.payload, quantity:1})
             toast.success("Added a new product",{
-                position:"top-center"
+                position:"top-left"
             })
         }
 
@@ -27,14 +27,14 @@ const  CartSlice = createSlice({
         Remove_To_Cart: (state,action) =>{
              state.cart = state.cart.filter((i)=>i.id !== action.payload)
         },
-        // Set_Product_Rating: (state, action) => {
-        //     const { id, rating } = action.payload;
-        //     const product = state.cart.find((item) => item.id === id);
-        //     if (product) {
-        //       product.rating = rating;
-        //       localStorage.setItem("cart", JSON.stringify(state.cart));
-        //     }
-        // }    
+        Set_Product_Rating: (state, action) => {
+            const { id, rating } = action.payload;
+            const product = state.cart.find((item) => item.id === id);
+            if (product) {
+              product.rating = rating;
+              localStorage.setItem("cart", JSON.stringify(state.cart));
+            }
+        }    
     }
 })
 
